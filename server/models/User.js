@@ -14,6 +14,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       match: [/.+@.+\..+/, 'Must match an email address!']
+      // - more notes in OneNote
     },
     password: {
       type: String,
@@ -40,7 +41,7 @@ const userSchema = new Schema(
   }
 );
 
-// set up pre-save middleware to create password
+// set up pre-save middleware to create password - more notes in OneNote
 userSchema.pre('save', async function(next) {
   if (this.isNew || this.isModified('password')) {
     const saltRounds = 10;
