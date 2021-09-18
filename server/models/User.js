@@ -14,7 +14,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       match: [/.+@.+\..+/, 'Must match an email address!']
-      // - more notes in OneNote
+      // The match option is a type of validation that allows us to use regex to test the input value. <string>@<string>.<string>
     },
     password: {
       type: String,
