@@ -1,8 +1,24 @@
 const { User, Thought } = require('../models');
+
 const { AuthenticationError } = require('apollo-server-express');
+const { signToken } = require('../utils/auth');
+// These two are utilized in Mutations for authentication and JWT
 
 const resolvers = {
     Query: {
+        // check if logged in?
+        me: async (parent, args, context) => {
+            if (context.user) {
+                const userData = await User.findOne({ _id: context.user._id })
+                    .select('-__v -password')
+                    .populate('thoughts')
+                    .populate('friends');
+
+                return userData;
+            }
+
+            throw new AuthenticationError('Not logged in');
+        },
         // thoughts: async() => {
         //     return Thought.find().sort({ createdAt: -1 });
         // }
@@ -32,8 +48,9 @@ const resolvers = {
     Mutation: {
         addUser: async(parent, args) => {
             const user = await User.create(args);
+            const token = signToken(user);
 
-            return user;
+            return { token, user };
         },
         
         login: async(parent, { email, password }) => {
@@ -49,7 +66,8 @@ const resolvers = {
                 throw new AuthenticationError('Incorrect credentials');
             }
 
-            return user;
+            const token = signToken(user)
+            return { token, user };
         }
     }
 };

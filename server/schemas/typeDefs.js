@@ -29,6 +29,7 @@ const typeDefs = gql`
     }
 
     type Query {
+        me: User
         users: [User]
         user(username: String!): User
         thoughts(username: String): [Thought]
@@ -36,14 +37,20 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        login(email: String!, password: String!): User
-        addUser(username: String!, email: String!, password: String!): User
+        login(email: String!, password: String!): Auth
+        addUser(username: String!, email: String!, password: String!): Auth
+    }
+
+    type Auth {
+        token: ID!
+        user: User
     }
 `;
 // `[Thought]` returns an array (replaced `String`)
     // Thought is the custom data type
 // (username: String) in `thoughts` allows query with/without username parameter
 // [Reaction] is nested in Thought
+// In Mutations, `Auth` replaced `User`
 
 // export the typeDefs
 module.exports = typeDefs;
