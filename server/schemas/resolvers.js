@@ -68,6 +68,53 @@ const resolvers = {
 
             const token = signToken(user)
             return { token, user };
+        },
+
+        addThought: async (parent, args, context) => {
+            if (context.user) {
+                const thought = await Thought.create({ ...args, username: context.user.username });
+
+                // context is used to see which user is adding thought
+                await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $push: { thoughts: thought._id } },
+                    { new: true }
+                );
+                // `new: true` = Mongo returns updated document and not
+
+                return thought;
+            }
+
+            throw new AuthenticationError('You need to be logged in!');
+        },
+
+        addReaction: async (parent, { thoughtId, reactionBody }, context) => {
+            if (context.user) {
+                const updatedThought = await Thought.findOneAndUpdate(
+                    { _id: thoughtId },
+                    { $push: { reactions: {reactionBody, username: context.user.username } } },
+                    { new: true, runValidators: true}
+                )
+
+                return updatedThought;
+            }
+
+            throw new AuthenticationError('You need to be logged in!');
+        },
+
+        addFriend: async (parent, { friendId }, context) => {
+            if(context.user) {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: { friends: friendId } },
+                    // $addToSet prevents duplicate entries, like in $push
+                    { new: true }
+                ).populate('friends');
+
+                return updatedUser;
+            }
+
+            throw new AuthenticationError('You need to be logged in!');
         }
     }
 };
