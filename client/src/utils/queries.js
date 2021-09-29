@@ -1,6 +1,7 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
-export const QUERY_THOUGHTS = gql`
+// ES6 module export syntax. Saved as Query_Thoughts
+export const Query_Thoughts = gql`
   query thoughts($username: String) {
     thoughts(username: $username) {
       _id
@@ -8,7 +9,7 @@ export const QUERY_THOUGHTS = gql`
       createdAt
       username
       reactionCount
-      reactions {
+      reactions{
         _id
         createdAt
         username
