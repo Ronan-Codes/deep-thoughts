@@ -9,7 +9,8 @@ import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@ap
 
 // establish a new link to the GraphQL server/endpoint
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  // uri: 'http://localhost:3001/graphql',
+  uri: '/graphql',
 });
 
 // ApolloClient() constructor to instantiate the Apollo Client and create the connection to the API endpoint
