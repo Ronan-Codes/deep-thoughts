@@ -6,6 +6,15 @@ import Home from './pages/Home';
 
 // integrate Apollo server into the front end of application
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+// import React-Router-Dom
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+// Other page components
+import Login from './pages/Login';
+import NoMatch from './pages/NoMatch';
+import SingleThought from './pages/SingleThought';
+import Profile from './pages/Profile';
+import Signup from './pages/Signup';
 
 // establish a new link to the GraphQL server/endpoint
 const httpLink = createHttpLink({
@@ -24,13 +33,29 @@ function App() {
   return (
     // enable entire app to interact with ApolloClient instance
     <ApolloProvider client={client}>
-      <div className='flex-column justify-flex-start min-100-vh'>
-        <Header />
-        <div className='container'>
-          <Home />
+      {/* makes all child components aware of all client-side routing */}
+      <Router>
+        <div className='flex-column justify-flex-start min-100-vh'>
+          <Header />
+
+          <div className='container'>
+            {/* <Home /> */}
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={Signup} />
+              {/* '?' means it is optional. /profile is the logged in user's profile */}
+              <Route exact path="/profile/:username?" component={Profile} />
+              <Route exact path="/thought/:id" component={SingleThought} />
+
+              {/* Catch-all , 404 message */}
+              <Route component={NoMatch} />
+            </Switch>
+          </div>
+          
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </Router>
     </ApolloProvider>
   );
 }
