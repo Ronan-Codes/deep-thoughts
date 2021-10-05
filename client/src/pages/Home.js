@@ -2,14 +2,14 @@ import React from 'react';
 
 // useQuery allows requests to GraphQL server (connected throught <ApolloProvider> in App.js)
 import { useQuery } from '@apollo/client';
-import { Query_Thoughts } from '../utils/queries';
+import { QUERY_THOUGHTS } from '../utils/queries';
 
 import ThoughtList from '../components/ThoughtList';
 
 const Home = () => {
   // use useQuery hook to make query request 
   // this is asynchronous and provides `loading` property while waiting. Information is stored in `data`
-  const { loading, data } = useQuery(Query_Thoughts);
+  const { loading, data } = useQuery(QUERY_THOUGHTS);
 
   // `optional chaining`: if data exists, store it in thoughts constant. If data is undefined, save an empty array to the thoughts component
   const thoughts = data?.thoughts || [];
