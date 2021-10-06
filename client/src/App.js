@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 // import React-Router-Dom
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// Retrieve token everytime we make GraphQL request
+import { setContext } from '@apollo/client/link/context';
 
 // Other page components
 import Login from './pages/Login';
@@ -16,16 +18,28 @@ import SingleThought from './pages/SingleThought';
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 
+
 // establish a new link to the GraphQL server/endpoint
 const httpLink = createHttpLink({
   // uri: 'http://localhost:3001/graphql',
   uri: '/graphql',
 });
 
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    }
+  }
+})
+
 // ApolloClient() constructor to instantiate the Apollo Client and create the connection to the API endpoint
   // also instantiates a new cache
+    // authLink is added so every request retrieves the token and sets the request headers before making the request to the API.
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 })
 

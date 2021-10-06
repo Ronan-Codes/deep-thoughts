@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 
+import Auth from '../utils/auth';
+
 const Signup = () => {
   // 1st is current state, and second item is function that allows you to update the current state 
   const [formState, setFormState] = useState({ username: '', email: '', password: '' });
@@ -31,7 +33,10 @@ const Signup = () => {
       const { data } = await addUser({
         variables: { ...formState }
       });
-      console.log(data);
+      
+      // take the token and set it to localStorage.
+      Auth.login(data.addUser.token)
+      
     } catch (e) {
       console.error(e);
     }
