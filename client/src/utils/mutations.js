@@ -25,3 +25,17 @@ export const ADD_USER = gql`
 `
 // The returning data should be the same, so we don't have to add the extra step for users to log in after signing up.
 // Remember, the names and format that we use have to match what we set up on the server!
+
+export const ADD_FRIEND = gql`
+    mutation addFriend($id: ID!) {
+        addFriend(friendId: $id) {
+            _id
+            username
+            friendCount
+            friends {
+                _id
+                username
+            }
+        }
+    }
+`;
