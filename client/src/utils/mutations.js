@@ -40,6 +40,7 @@ export const ADD_FRIEND = gql`
     }
 `;
 
+// In Home.js and Profile.js > ThoughtForm
 export const ADD_THOUGHT = gql`
     mutation addThought($thoughtText: String!) {
         addThought(thoughtText: $thoughtText) {
@@ -50,6 +51,22 @@ export const ADD_THOUGHT = gql`
             reactionCount
             reactions {
                 _id
+            }
+        }
+    }
+`;
+
+// In SingleThought.js > ReactionForm
+export const ADD_REACTION = gql`
+    mutation addReaction($thoughtId: ID!, $reactionBody: String!) {
+        addReaction(thoughtId: $thoughtId, reactionBody: $reactionBody) {
+            _id
+            reactionCount
+            reactions {
+                _id
+                reactionBody
+                createdAt
+                username
             }
         }
     }
